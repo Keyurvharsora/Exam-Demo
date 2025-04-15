@@ -1,0 +1,38 @@
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.height {
+    height: 600px;
+}
+.inner {
+    border: 1px solid black;
+}
+.inner-div {
+    padding: 25px;
+    width: 600px;
+}
+.bottom {
+    text-align: center;
+    padding: 5px 0px;
+    margin-bottom: 30px;
+}
+.form {
+    padding: 30px;
+}
+.link {
+    color: #9c9c9c;
+}
+.link:hover {
+    color: #0c6efd;
+}
+.login-button {
+    font-size: 18px;
+}
+
+.forget-page {
+    text-align: center;
+    height: 350px;
+    gap: 20px;
+}

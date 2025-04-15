@@ -1,0 +1,24 @@
+.inputs input[type="text"] {
+    height: 35px;
+    align-self: center;
+}
+.inputs {
+    display: flex;
+}
+#resultTable {
+    width: 50%;
+    margin-top: 20px;
+    border: 1px solid black;
+}
+#resultTable td,#resultTable th{
+    border-bottom: 1px solid black;
+    padding: 10px;
+    height: 40px;
+    text-align: left;
+}
+
+.label {
+    display: flex;
+    margin: 15px;
+    gap: 10px;
+}
