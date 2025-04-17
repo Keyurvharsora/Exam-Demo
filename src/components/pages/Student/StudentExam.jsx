@@ -33,7 +33,6 @@ const StudentExam = () => {
   const navigate = useNavigate();
 
   const resultStorageKey = `exam_results_${id}`;
-  const indexStoredKey = `exam_currentQuestionIndex_${id}`;
 
   useEffect(() => {
     const fetchExamPaper = async () => {
@@ -57,11 +56,6 @@ const StudentExam = () => {
           resultStorageKey,
           JSON.stringify(editResult || initialResult)
         );
-      }
-
-      const storedIndex = localStorage.getItem(indexStoredKey);
-      if (storedIndex) {
-        setCurrentQuestionIndex(parseInt(storedIndex));
       }
 
       if (response?.data?.statusCode === 500) {
@@ -92,11 +86,9 @@ const StudentExam = () => {
   const handlePageChange = (event, value) => {
     const newIndex = value - 1;
     setCurrentQuestionIndex(newIndex);
-    localStorage.setItem(indexStoredKey, newIndex);
   };
 
   const handleNavigate = () => {
-
     navigate(`${STUDENT_DASHBOARD}/${REVIEW_EXAM}`, {
       state: {
         results,
@@ -104,7 +96,6 @@ const StudentExam = () => {
         id,
         notes,
         resultStorageKey,
-        indexStoredKey,
       },
     });
   };

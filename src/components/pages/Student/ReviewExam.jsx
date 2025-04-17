@@ -19,7 +19,6 @@ const ReviewExam = () => {
     id,
     notes,
     resultStorageKey,
-    indexStoredKey,
   } = location.state || {};
   const results = [...initialResult];
   const navigate = useNavigate();
@@ -47,7 +46,6 @@ const ReviewExam = () => {
       toast.success(response?.data?.message);
 
       localStorage.removeItem(resultStorageKey);
-      localStorage.removeItem(indexStoredKey);
 
       navigate(STUDENT_DASHBOARD);
     } catch (error) {
@@ -89,7 +87,7 @@ const ReviewExam = () => {
         </button>
         or you can edit the answer in below table.
       </div>
-      
+
       <Table
         headers={["Sr no.", "Question", "Answer", "Action"]}
         data={tableData}
