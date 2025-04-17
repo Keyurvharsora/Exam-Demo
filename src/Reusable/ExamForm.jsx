@@ -20,17 +20,41 @@ const ExamForm = ({ examData = null, onSave, onCancel, loading }) => {
     answer: "",
     options: ["", "", "", ""],
   }));
+  // const STORAGE_KEY = "examData"
   const [saveQuestion, setSaveQuestion] = useState(
     JSON.parse(JSON.stringify(examData?.questions || initialQuestionState))
   );
   const [questions, setQuestions] = useState(initialQuestionState);
   const [notes, setNotes] = useState(examData?.notes || []);
 
+  // useEffect(() => {
+  //   const savedData = localStorage.getItem(STORAGE_KEY);
+  //   if (savedData) {
+  //     const parsed = JSON.parse(savedData);
+  //     setSubjectName(parsed.subjectName || "");
+  //     setQuestions(parsed.questions || initialQuestionState);
+  //     setNotes(parsed.notes || []);
+  //     console.log("savedData", JSON.parse(savedData));
+  //   } else if (examData) {
+  //     setSubjectName(examData?.subjectName || "");
+  //     setQuestions(
+  //       JSON.parse(JSON.stringify(examData?.questions || initialQuestionState))
+  //     );
+  //     setNotes(examData?.notes || []);
+  //   }
+  // }, [examData]);
+
+  // useEffect(() => {
+  //   const dataToSave = { subjectName, questions, notes };
+  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+  // }, [subjectName, questions, notes]);
+
   useEffect(() => {
     if (examData) {
       setQuestions(examData?.questions || initialQuestionState);
     }
   }, [examData]);
+
   console.log("Question", questions);
 
   const handleChange = (field, value, index) => {
@@ -41,9 +65,11 @@ const ExamForm = ({ examData = null, onSave, onCancel, loading }) => {
       updatedQuestion[currentQuestionIndex][field] = value;
     }
     setQuestions(updatedQuestion);
+    // localStorage.setItem(STORAGE_KEY, JSON.stringify({questions : updatedQuestion}));
   };
 
-  const handleSave = () => {
+  const handleSave = (e) => {
+    e.preventDefault();
     if (subjectName === "")
       return toast.error("Please enter a subject name", { toastId: CUSTOM_ID });
     if (notes.length === 0)
@@ -56,9 +82,10 @@ const ExamForm = ({ examData = null, onSave, onCancel, loading }) => {
     )
       return;
 
+    // localStorage.removeItem(STORAGE_KEY);
     onSave({ subjectName, saveQuestion, notes });
   };
-  
+
   const handlePageChange = (event, value) => {
     const original = saveQuestion;
 
@@ -70,8 +97,8 @@ const ExamForm = ({ examData = null, onSave, onCancel, loading }) => {
         ) {
           const bool = confirm("Do you want changes");
           if (!bool) {
-            return setQuestions(JSON.parse(JSON.stringify(original)))
-          };
+            return setQuestions(JSON.parse(JSON.stringify(original)));
+          }
           handleSaveExam(currentQuestionIndex);
         }
       }

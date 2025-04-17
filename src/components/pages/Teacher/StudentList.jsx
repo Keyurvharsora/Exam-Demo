@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { TablePagination } from "@mui/material";
 import "../../CSS/table.css";
+import Table from "../../../Reusable/Table";
+import { Email } from "@mui/icons-material";
 
 const StudentList = () => {
   const [student, setStudent] = useState("");
@@ -139,7 +141,7 @@ const StudentList = () => {
         </div>
       </div>
 
-      <table>
+      <table style={{ maxHeight: "600px" }}>
         <thead>
           <tr>
             <th>Name</th>
@@ -182,7 +184,7 @@ const StudentList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15, 20]}
             component="div"
-            count={filteredData?.length}
+            count={filteredData?.length || 0}
             page={currentIndex}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

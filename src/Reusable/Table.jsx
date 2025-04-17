@@ -1,38 +1,31 @@
 import React from "react";
 
-const Table = ({ theadKeyMap, tbodyValueMap, buttonAttributes = null }) => {
+const Table = ({ headers, data }) => {
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            {theadKeyMap?.map((value, index) => (
-              <th key={index}>{value}</th>
-            ))}
-          </tr>
-        </thead>
+      <div className="student-table">
+        <table>
+          <thead>
+            <tr>
+              {headers.map((header, i) => (
+                <th key={i}>{header}</th>
+              ))}
+            </tr>
+          </thead>
 
-        <tbody>
-          <tr>
-            {tbodyValueMap?.map(([key, value]) => {
-                if(value === "studentAnswer") return;
-                if(theadKeyMap.includes(key)) return (
-                    <td>{value}</td>
-                )
-            }
-                         
-            
-            //   return (
-            //     <tr key={index}>
-            //       {Object.values(value.Result[0]).map((values, index) => {
-            //         return <td key={index}>{values}</td>;
-            //       })}
-            //     </tr>
-            //   );
-            )}
-          </tr>
-        </tbody>
-      </table>
+          
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={index}>
+                {headers.map((header, i) => (
+                  <td key={i}>{row[header]}</td>
+                ))}
+              </tr>
+            ))}
+            {data?.length === 0 && <p className="not-found">No Result Found</p>}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

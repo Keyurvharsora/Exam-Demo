@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
@@ -9,10 +9,18 @@ import {
   STUDENT_EXAM,
 } from "../../../Constants/constants";
 import { toast } from "react-toastify";
+import Table from "../../../Reusable/Table";
 
 const ReviewExam = () => {
   const location = useLocation();
-  const { results: initialResult, questions, id, notes } = location.state || {};
+  const {
+    results: initialResult,
+    questions,
+    id,
+    notes,
+    resultStorageKey,
+    indexStoredKey,
+  } = location.state || {};
   const results = [...initialResult];
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -38,7 +46,9 @@ const ReviewExam = () => {
       );
       toast.success(response?.data?.message);
 
-      console.log("Exam submitted successfully", response.data);
+      localStorage.removeItem(resultStorageKey);
+      localStorage.removeItem(indexStoredKey);
+
       navigate(STUDENT_DASHBOARD);
     } catch (error) {
       console.log(error);
@@ -46,6 +56,23 @@ const ReviewExam = () => {
       setLoading(false);
     }
   };
+
+  const tableData = results.map((result, index) => ({
+    "Sr no.": index + 1,
+    Question: questions.data[index].question,
+    Answer: result.answer,
+    Action: (
+      <button
+        onClick={() =>
+          navigate(`${STUDENT_DASHBOARD}/${EXAM_PAPER}/${id}`, {
+            state: { results, index, notes },
+          })
+        }
+      >
+        <EditIcon fontSize="small" /> &nbsp; Edit
+      </button>
+    ),
+  }));
 
   return (
     <>
@@ -62,7 +89,12 @@ const ReviewExam = () => {
         </button>
         or you can edit the answer in below table.
       </div>
-      <table>
+      
+      <Table
+        headers={["Sr no.", "Question", "Answer", "Action"]}
+        data={tableData}
+      />
+      {/* <table>
         <thead>
           <tr>
             <th>Sr no.</th>
@@ -93,7 +125,7 @@ const ReviewExam = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </>
   );
 };

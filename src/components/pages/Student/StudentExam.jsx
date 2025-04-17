@@ -16,8 +16,8 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { toast } from "react-toastify";
 
 const StudentExam = () => {
@@ -32,19 +32,38 @@ const StudentExam = () => {
   );
   const navigate = useNavigate();
 
+  const resultStorageKey = `exam_results_${id}`;
+  const indexStoredKey = `exam_currentQuestionIndex_${id}`;
+
   useEffect(() => {
     const fetchExamPaper = async () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API}/student/${EXAM_PAPER}?id=${id}`,
         { headers: { "access-token": localStorage.getItem("token") } }
       );
-
       setQuestions(response.data);
-      const initialResult = response?.data?.data?.map((q) => ({
-        question: q._id,
-        answer: "",
-      }));
-      setResults(editResult || initialResult);
+
+      const storedResult = localStorage.getItem(resultStorageKey);
+      if (storedResult) {
+        setResults(JSON.parse(storedResult));
+      } else {
+        const initialResult = response?.data?.data?.map((q) => ({
+          question: q._id,
+          answer: "",
+        }));
+
+        setResults(editResult || initialResult);
+        localStorage.setItem(
+          resultStorageKey,
+          JSON.stringify(editResult || initialResult)
+        );
+      }
+
+      const storedIndex = localStorage.getItem(indexStoredKey);
+      if (storedIndex) {
+        setCurrentQuestionIndex(parseInt(storedIndex));
+      }
+
       if (response?.data?.statusCode === 500) {
         toast.error("Can't find exam");
       }
@@ -53,6 +72,12 @@ const StudentExam = () => {
     fetchExamPaper();
   }, []);
 
+  useEffect(() => {
+    const res = results;
+    localStorage.setItem("examData", JSON.stringify(res));
+  }, [editResult, results]);
+
+  console.log("results", results);
   const handleOptionsChange = (questionId, selectedAnswer) => {
     const updatedQuestion = results?.map((result) =>
       result.question === questionId
@@ -60,11 +85,28 @@ const StudentExam = () => {
         : result
     );
     setResults(updatedQuestion);
+    localStorage.setItem(resultStorageKey, JSON.stringify(updatedQuestion));
     // (currentQuestionIndex < results.length - 1) && setCurrentQuestionIndex(currentQuestionIndex + 1)
   };
 
   const handlePageChange = (event, value) => {
-    setCurrentQuestionIndex(value - 1);
+    const newIndex = value - 1;
+    setCurrentQuestionIndex(newIndex);
+    localStorage.setItem(indexStoredKey, newIndex);
+  };
+
+  const handleNavigate = () => {
+
+    navigate(`${STUDENT_DASHBOARD}/${REVIEW_EXAM}`, {
+      state: {
+        results,
+        questions,
+        id,
+        notes,
+        resultStorageKey,
+        indexStoredKey,
+      },
+    });
   };
 
   return (
@@ -116,11 +158,7 @@ const StudentExam = () => {
                 <button
                   className="modal-button"
                   style={{ width: "140px" }}
-                  onClick={() =>
-                    navigate(`${STUDENT_DASHBOARD}/${REVIEW_EXAM}`, {
-                      state: { results, questions, id, notes },
-                    })
-                  }
+                  onClick={handleNavigate}
                 >
                   Submit & Review
                 </button>

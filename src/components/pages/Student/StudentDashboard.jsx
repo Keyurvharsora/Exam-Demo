@@ -57,7 +57,7 @@ const StudentDashboard = () => {
           <CircularProgress />
         </Box>
       )}
-      <table className="studentTable">
+      <table className="studentTable" style={{maxHeight:"600px"}}>
         <thead>
           <tr>
             <th>Subject Name</th>
@@ -103,16 +103,16 @@ const StudentDashboard = () => {
                 </tr>
               ))
             : ""}
-        </tbody>
         <TablePagination
           rowsPerPageOptions={[5, 10, 15, 20]}
           component="div"
-          count={studentExam?.data?.length}
+          count={studentExam?.data?.length || 0}
           page={currentIndex}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+        </tbody>
       </table>
     </>
   );

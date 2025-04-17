@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { toast } from "react-toastify";
+import Table from "../../../Reusable/Table";
 
 const Dashboard = () => {
   const [exam, setExam] = useState("");
@@ -57,6 +58,31 @@ const Dashboard = () => {
     }
   };
 
+  const tableData = (exam?.data || []).map((exam, index) => ({
+    "Sr.No": index + 1,
+    "Subject Name": exam.subjectName,
+    Action: (
+      <button
+        onClick={() =>
+          navigate(`${EDIT_EXAM}/${exam?._id}`, {
+            state: {
+              subjectName: exam.subjectName,
+              notes: exam.notes,
+            },
+          })
+        }
+      >
+        <EditIcon fontSize="small" /> &nbsp; Edit
+      </button>
+    ),
+    Delete: (
+      <button onClick={() => handleDelete(exam?._id)}>
+        <DeleteIcon fontSize="small" />
+        Delete
+      </button>
+    ),
+  }));
+
   return (
     <>
       <h1>Welcome to Teacher Dashboard</h1>
@@ -71,7 +97,16 @@ const Dashboard = () => {
           <AddIcon /> &nbsp; Create Exam
         </button>
       </div>
-      <div className="table-container">
+      {!exam && (
+        <Box id="loading">
+          <CircularProgress />
+        </Box>
+      )}
+      <Table
+        headers={["Sr.No", "Subject Name", "Action", "Delete"]}
+        data={tableData}
+      />
+      {/* <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -81,11 +116,7 @@ const Dashboard = () => {
               <th>Delete</th>
             </tr>
           </thead>
-          {!exam && (
-            <Box id="loading">
-              <CircularProgress />
-            </Box>
-          )}
+
           <tbody>
             {exam?.data?.length === 0 && (
               <p className="not-found">No Exam found</p>
@@ -118,7 +149,7 @@ const Dashboard = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -60,8 +60,8 @@ const EditExam = () => {
     }
   };
 
-  if (loading)
-     (
+  if (!exam)
+    return (
       <Box id="loading">
         <CircularProgress />
       </Box>

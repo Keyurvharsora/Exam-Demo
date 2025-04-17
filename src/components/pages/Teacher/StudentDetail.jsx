@@ -41,16 +41,42 @@ const StudentDetail = () => {
       )}
       {studentDetail?.data?.map?.((student) => (
         <div>
+          {console.log(
+            "data",
+            student?.Result?.map((result) =>
+              result?.studentAnswer?.map((r) => ({
+                Subject: result.subjectName,
+                Question: r.question,
+                Answer: r.answer,
+              }))
+            )
+          )}
+          {console.log(
+            "detail",
+            student?.Result?.map((result) => ({
+              subjectName: result.subjectName,
+              score: result.score,
+              rank: result.rank,
+              resultStatus: result.resultStatus,
+            }))
+          )}
+
           <div className="student-detail">
             <h4>Name: {student.name}</h4>
             <h4>Email: {student.email}</h4>
           </div>
-          <h4>Result: </h4> 
+          <h4>Result: </h4>
           <div key={student._id}>
-            {console.log("entries",Object.values(student.Result[0]))}
-            {/* <Table theadKeyMap={Object.keys(student.Result[0])} tbodyValueMap={Object.values(student.Result[0])} /> */}
-            {/* <Table theadKeyMap={["score","subjectName","rank","resultStatus"]} tbodyValueMap={Object.entries(student.Result[0])} /> */}
-            <table className="student-table">
+            <Table
+              headers={["subjectName", "score", "rank", "resultStatus"]}
+              data={student?.Result?.map((result) => ({
+                subjectName: result.subjectName,
+                score: result.score,
+                rank: result.rank,
+                resultStatus: result.resultStatus,
+              }))}
+            />
+            {/* <table className="student-table">
               <thead>
                 <tr>
                   <th>Subject</th>
@@ -72,11 +98,19 @@ const StudentDetail = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
-            <h4>Review Answer: </h4>
-            {console.log("ans",Object.entries(Object.values(student.Result[0].studentAnswer)))}
-            {/* <Table theadKeyMap={["Subject","Question","Answer"]} tbodyValueMap={Object.values(Object.entries(student.Result[0].studentAnswer))}/> */}
-            <table className="student-table">
+            </table> */}
+            <h4 style={{marginTop:"5px"}}>Review Answer: </h4>
+            <Table
+              headers={["Subject", "Question", "Answer"]}
+              data={student?.Result?.flatMap((result) =>
+                result?.studentAnswer?.map((r) => ({
+                  Subject: result.subjectName,
+                  Question: r.question,
+                  Answer: r.answer,
+                }))
+              )}
+            />
+            {/* <table className="student-table">
               <thead>
                 <tr>
                   <th>Subject</th>
@@ -98,7 +132,7 @@ const StudentDetail = () => {
                   ))
                 )}
               </tbody>
-            </table>
+            </table> */}
           </div>
         </div>
       ))}
