@@ -5,20 +5,17 @@ import {
   LOGIN,
   USER_RESET_PASSWORD_API,
 } from "../../../Constants/constants";
-import Input from "../../../Reusable/Input";
 import Button from "../../../Reusable/Button";
 import { toast } from "react-toastify";
 import { validation } from "../../../Utils/validation";
 import Card from "../../../Reusable/Card";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import Form from "../../../Reusable/Form";
+import { resetPasswordFormFields } from "../../../Constants/formFields";
 
 const ResetPassword = () => {
-  const [resetPassword, setResetPassword] = useState({
-    Password: "",
-    oldPassword: "",
-    ConfirmPassword: "",
-  });
+  const [resetPassword, setResetPassword] = useState(Object.fromEntries(Object.keys(resetPasswordFormFields).map((item) => [item, ""])));
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -62,7 +59,7 @@ const ResetPassword = () => {
       <Card>
         <h2 className="h4 mb-5 text-center">Reset Password Form</h2>
 
-        <form onSubmit={handleResetSubmit}>
+        {/* <form onSubmit={handleResetSubmit}>
           <div className="col-12 form-floating mb-3">
             <Input
               type={"password"}
@@ -90,7 +87,10 @@ const ResetPassword = () => {
               onChange={(e) => handlePasswordChange(e, "ConfirmPassword")}
             />
           </div>
-          <div className="text-center pt-1 mb-5 pb-1">
+        </form> */}
+        <Form formAttribute={resetPasswordFormFields} onChange={handlePasswordChange}/>
+
+          <div className="text-center pt-1 mb-5 pb-1" onClick={handleResetSubmit}>
             <Button
               prop={
                 loading ? (
@@ -103,7 +103,6 @@ const ResetPassword = () => {
               }
             />
           </div>
-        </form>
       </Card>
     </>
   );

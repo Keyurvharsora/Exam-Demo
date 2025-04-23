@@ -2,26 +2,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LOGIN, USER_SIGNUP_API } from "../../../Constants/constants";
-import Input from "../../../Reusable/Input";
-import {
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Button from "../../../Reusable/Button";
 import { toast } from "react-toastify";
 import { validation } from "../../../Utils/validation";
 import Card from "../../../Reusable/Card";
+import Form from "../../../Reusable/Form";
+import { signupFormFields } from "../../../Constants/formFields";
 
 const SignUp = () => {
-  const [inputs, setInputs] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "student",
-  });
+  const [inputs, setInputs] = useState(
+    Object.fromEntries(Object.keys(signupFormFields).map((item) => [item, ""]))
+  );
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -29,27 +21,15 @@ const SignUp = () => {
     event.preventDefault();
     if (loading) return;
 
-    if (
-      validation({
-        name: inputs.name,
-        email: inputs.email,
-        password: inputs.password,
-      })
-    )
-      return;
+    if (validation(inputs)) return;
 
     setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/${USER_SIGNUP_API}`,
-        {
-          name: inputs.name,
-          email: inputs.email,
-          password: inputs.password,
-          role: inputs.role,
-        }
+        { ...inputs }
       );
-      
+
       if (response?.data?.statusCode === 200)
         toast.success(response?.data?.message);
       else return toast.error(response?.data?.message);
@@ -71,7 +51,7 @@ const SignUp = () => {
       <Card>
         <h2 className="h4 mb-5 text-center">Sign Up Form</h2>
 
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <div className="row gy-3 ">
             <div className="col-12 form-floating">
               <Input
@@ -118,22 +98,23 @@ const SignUp = () => {
                 </Select>
               </FormControl>
             </div>
-
-            <div className="bottom">
-              <Button
-                prop={
-                  loading ? (
-                    <span className="login-button">
-                      <CircularProgress size={15} color="white" /> Sign Up
-                    </span>
-                  ) : (
-                    "Sign Up"
-                  )
-                }
-              />
-            </div>
           </div>
-        </form>
+        </form> */}
+        <Form formAttribute={signupFormFields} onChange={handleInputChange} />
+        <div className="bottom">
+          <Button
+            onClick={handleSubmit}
+            prop={
+              loading ? (
+                <span className="login-button">
+                  <CircularProgress size={15} color="white" /> Sign Up
+                </span>
+              ) : (
+                "Sign Up"
+              )
+            }
+          />
+        </div>
 
         <p className="m-0 text-secondary text-center">
           Already have an account?{" "}

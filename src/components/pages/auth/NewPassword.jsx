@@ -7,9 +7,11 @@ import Input from "../../../Reusable/Input";
 import { toast } from "react-toastify";
 import { validation } from "../../../Utils/validation";
 import Card from "../../../Reusable/Card";
+import Form from "../../../Reusable/Form";
+import { newPasswordFormFields } from "../../../Constants/formFields";
 
 const NewPassword = () => {
-  const [form, setForm] = useState({ Password: "", ConfirmPassword: "" });
+  const [form, setForm] = useState(Object.fromEntries(Object.keys(newPasswordFormFields).map((item) => [item, ""])));
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const location = useLocation();
@@ -37,7 +39,6 @@ const NewPassword = () => {
         return toast.error(response?.data?.message);
       else toast.success("Successfully changed password");
 
-      console.log("response", response);
       setMessage(response.message);
       if (response.status === 200) {
         toast.success(response?.data?.message);
@@ -56,8 +57,8 @@ const NewPassword = () => {
 
   return (
     <Card>
-      <form onSubmit={handleLoginSubmit}>
         <p>Set a new password</p>
+      {/* <form onSubmit={handleLoginSubmit}>
 
         <div data-mdb-input-init className="form-outline mb-4">
           <Input
@@ -79,11 +80,14 @@ const NewPassword = () => {
           />
         </div>
 
+      </form> */} 
+
+      <Form formAttribute={newPasswordFormFields} onChange={handleInputChange}/>
+
         <div className="text-center pt-1 mb-5 pb-1">
-          <Button prop={"Submit"} />
+          <Button onClick={handleLoginSubmit} prop={"Submit"} />
         </div>
         {message && <p style={{ textAlign: "center" }}>{message}</p>}
-      </form>
     </Card>
   );
 };

@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { validation } from "../../../Utils/validation";
 import Card from "../../../Reusable/Card";
 import "../../CSS/button.css";
+import Form from "../../../Reusable/Form";
+import { forgotPasswordFormFields } from "../../../Constants/formFields";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +18,7 @@ const ForgetPassword = () => {
     event.preventDefault();
     if (loading) return;
 
-    if (validation({ email: email })) return;
+    if (validation(email)) return;
 
     setLoading(true);
     try {
@@ -39,32 +41,37 @@ const ForgetPassword = () => {
 
   return (
     <Card>
-      <form action="" onSubmit={handleForgetSubmit}>
-        <div>
-          <div className="forget-page">
-            <div className="h2 text-black">Password Reset</div>
-            <hr />
-            <div className="card-body px-5">
-              <p className="card-text py-2">
-                Enter your email address and we'll send you an email with
-                instructions to reset your password.
-              </p>
-              <div className="form-outline">
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="Email address"
-                  className="form-control my-3"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <button type="submit" className="reset-button">
-                Reset password
-              </button>
-            </div>
+      <div>
+        <div className="forget-page">
+          <div className="h2 text-black">Password Reset</div>
+          <hr />
+          <div className="card-body px-5">
+            <p className="card-text py-2">
+              Enter your email address and we'll send you an email with
+              instructions to reset your password.
+            </p>
           </div>
         </div>
-      </form>
+      </div>
+      {/* <form action="" onSubmit={handleForgetSubmit}>
+        <div className="form-outline">
+          <input
+            type="email"
+            id="email"
+            placeholder="Email address"
+            className="form-control my-3"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+      </form> */}
+
+      <Form formAttribute={forgotPasswordFormFields} onChange={(e) => setEmail(e.target.value)}/>
+
+      <div style={{ textAlign: "center" }}>
+      <button className="reset-button" onClick={handleForgetSubmit}>
+        Reset password
+      </button>
+      </div>
     </Card>
   );
 };

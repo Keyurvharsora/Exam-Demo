@@ -15,9 +15,11 @@ import { toast } from "react-toastify";
 import { validation } from "../../../Utils/validation";
 import Card from "../../../Reusable/Card";
 import { CircularProgress } from "@mui/material";
+import Form from "../../../Reusable/Form";
+import { loginFormFields } from "../../../Constants/formFields";
 
 const Login = () => {
-  const [formAction, setFormAction] = useState({ email: "", password: "" });
+  const [formAction, setFormAction] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -25,8 +27,7 @@ const Login = () => {
     event.preventDefault();
     if (loading) return;
 
-    if (validation({ email: formAction.email, password: formAction.password }))
-      return;
+    if (validation(formAction)) return;
 
     setLoading(true);
 
@@ -44,9 +45,13 @@ const Login = () => {
 
       if (token) {
         localStorage.setItem("token", token);
-        response?.data?.data?.role === "teacher"
-          ? navigate(TEACHER_DASHBOARD, { replace: true })
-          : navigate(STUDENT_DASHBOARD, { replace: true });
+
+        navigate(
+          response?.data?.data?.role === "teacher"
+            ? TEACHER_DASHBOARD
+            : STUDENT_DASHBOARD,
+          { replace: true }
+        );
       }
       console.log("Login Side", response.data);
     } catch (error) {
@@ -59,12 +64,11 @@ const Login = () => {
   const handleInputChange = (event, name) => {
     setFormAction({ ...formAction, [name]: event.target.value });
   };
-
   return (
     <>
       <Card>
-        <form className="form" onSubmit={handleLoginSubmit}>
-          <h5>Please login to your account</h5>
+        <h5>Please login to your account</h5>
+        {/* <form className="form" onSubmit={handleLoginSubmit}>
           <div className="form-outline mb-4">
             <Input
               type={"text"}
@@ -84,29 +88,32 @@ const Login = () => {
               onChange={(e) => handleInputChange(e, "password")}
             />
           </div>
-          <div className="bottom">
-            <Button
-              prop={
-                loading ? (
-                  <span className="login-button">
-                    <CircularProgress size={15} color="white" /> Log In
-                  </span>
-                ) : (
-                  "Log In"
-                )
-              }
-            />
-            <br />
-            <Link className="link" to={FORGOT_PASSWORD}>
-              Forgot password?
-            </Link>
-          </div>
+        </form> */}
 
-          <div className="flex pb-3" >
-            <p className="mb-0 me-2">Don't have an account?</p>
-            <Link to={SIGNUP}>SignUp</Link>
-          </div>
-        </form>
+        <Form formAttribute={loginFormFields} onChange={handleInputChange} />
+        <div className="bottom">
+          <Button
+            prop={
+              loading ? (
+                <span className="login-button">
+                  <CircularProgress size={15} color="white" /> Log In
+                </span>
+              ) : (
+                "Log In"
+              )
+            }
+            onClick={handleLoginSubmit}
+          />
+          <br />
+          <Link className="link" to={FORGOT_PASSWORD}>
+            Forgot password?
+          </Link>
+        </div>
+
+        <div className="flex pb-3">
+          <p className="mb-0 me-2">Don't have an account?</p>
+          <Link to={SIGNUP}>SignUp</Link>
+        </div>
       </Card>
     </>
   );
